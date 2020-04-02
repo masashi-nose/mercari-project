@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.domain.Item;
+import com.example.demo.domain.Original;
 
 /**
  * itemsテーブルを操作するリポジトリ.
@@ -64,5 +65,7 @@ public class ItemRepository {
 		List<Item> itemList = template.query(sql, ITEM_ROW_MAPPER);
 		return itemList;
 	}
+	
+	
 
 }
