@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.service;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import com.example.demo.repository.ItemRepository;
  */
 @Service
 @Transactional
-public class showItemListService {
+public class ShowItemListService {
 
 	@Autowired
 	private ItemRepository itemRepository;
@@ -28,7 +28,7 @@ public class showItemListService {
 	 * 
 	 * @return 商品情報が詰まったオブジェクトのリスト
 	 */
-	public List<Item> itemList() {
+	public List<Item> showItemList() {
 		return itemRepository.findAll();
 
 	}

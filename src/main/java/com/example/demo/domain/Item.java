@@ -1,5 +1,7 @@
 package com.example.demo.domain;
 
+import java.util.List;
+
 /**
  * itemsテーブルのカラム情報を持つドメインです.
  * 
@@ -23,11 +25,14 @@ public class Item {
 	private Integer shipping;
 	/** 詳細 */
 	private String description;
+	/** カテゴリーリスト */
+	private List<Category> categoryList;
 
 	@Override
 	public String toString() {
 		return "Item [id=" + id + ", name=" + name + ", condition=" + condition + ", category=" + category + ", brand="
-				+ brand + ", price=" + price + ", shipping=" + shipping + ", description=" + description + "]";
+				+ brand + ", price=" + price + ", shipping=" + shipping + ", description=" + description
+				+ ", categoryList=" + categoryList + "]";
 	}
 
 	public Integer getId() {
@@ -92,6 +97,14 @@ public class Item {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public List<Category> getCategoryList() {
+		return categoryList;
+	}
+
+	public void setCategoryList(List<Category> categoryList) {
+		this.categoryList = categoryList;
 	}
 
 }
