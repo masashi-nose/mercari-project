@@ -58,7 +58,7 @@
           </tr>
           <tr>
             <th>price</th>
-            <td><span th:text="${item.price}"></span></td>
+            <td><span th:text="${'$' + item.price}"></span></td>
           </tr>
           <tr th:each="category:${item.categoryList}">
             <th>category</th>

@@ -3,12 +3,16 @@ package com.example.demo.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.domain.Category;
@@ -25,6 +29,9 @@ public class ItemRepository {
 
 	@Autowired
 	private NamedParameterJdbcTemplate template;
+
+	/** 自動採番されたID情報を持つオブジェクトが返ってくるinsertの実行準備. */
+	private SimpleJdbcInsert insert;
 
 	/**
 	 * itemsテーブルとcategoryテーブルを結合し、両テーブルのカラム情報を取得するResultSetExtractor.
@@ -112,11 +119,40 @@ public class ItemRepository {
 	 */
 	public List<Item> findAll() {
 		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT i.id item_id, i.name item_name, i.category item_category, i.condition item_condition, i.brand item_brand, i.price item_price, i.shipping item_shipping, i.description item_description, ");
-		sql.append("c.id category_id, c.parent category_parent, c.name category_name, c,name_all category_name_all from items i left join category c ");
+		sql.append(
+				"SELECT i.id item_id, i.name item_name, i.category item_category, i.condition item_condition, i.brand item_brand, i.price item_price, i.shipping item_shipping, i.description item_description, ");
+		sql.append(
+				"c.id category_id, c.parent category_parent, c.name category_name, c,name_all category_name_all from items i left join category c ");
 		sql.append("on i.category = c.id WHERE i.id <= 30 ORDER BY i.name");
 		List<Item> itemList = template.query(sql.toString(), ITEM_RESULT_SET_EXTRACTOR);
 		return itemList;
+
+	}
+
+	@PostConstruct
+	public void init() {
+		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert((JdbcTemplate) template.getJdbcOperations());
+		SimpleJdbcInsert withtableName = simpleJdbcInsert.withTableName("items");
+		insert = withtableName.usingColumns("id");
+
+	}
+
+	/**
+	 * itemsテーブルに商品情報を追加します.
+	 * 
+	 * @param item 商品情報が詰まったオブジェクト
+	 * @return IDが自動採番されたitemオブジェクト
+	 */
+	public Item insert(Item item) {
+		SqlParameterSource param = new BeanPropertySqlParameterSource(item);
+
+		if (item.getId() == null) {
+			Number key = insert.executeAndReturnKey(param);
+			item.setId(key.intValue());
+
+		}
+
+		return item;
 
 	}
 
