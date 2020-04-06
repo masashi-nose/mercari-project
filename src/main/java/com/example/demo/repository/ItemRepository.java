@@ -99,7 +99,7 @@ public class ItemRepository {
 		sql.append(
 				"SELECT i.id item_id, i.name item_name, i.category item_category, i.condition item_condition, i.brand item_brand, i.price item_price, i.shipping item_shipping, i.description item_description, ");
 		sql.append("c.id category_id, c.parent category_parent, c.name category_name, c,name_all category_name_all ");
-		sql.append("FROM items i left join category c on i.category = c.id WHERE id = :id");
+		sql.append("FROM items i left join category c on i.category = c.id WHERE i.id = :id");
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 		List<Item> itemList = template.query(sql.toString(), param, ITEM_RESULT_SET_EXTRACTOR);
 		return itemList.get(0);
