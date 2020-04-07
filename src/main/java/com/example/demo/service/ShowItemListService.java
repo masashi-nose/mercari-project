@@ -54,7 +54,7 @@ public class ShowItemListService {
 	 * 
 	 * @return 親カテゴリ情報の詰まったオブジェクトリスト
 	 */
-	public List<Category> parentCategoryList() {
+	public List<Category> findParentCategoryList() {
 		return categoryRepository.parentCategoryList();
 
 	}
@@ -64,7 +64,7 @@ public class ShowItemListService {
 	 * 
 	 * @return 子カテゴリ情報の詰まったオブジェクトリスト
 	 */
-	public List<Category> childCategoryList() {
+	public List<Category> findChildCategoryList() {
 		return categoryRepository.childCategoryList();
 
 	}
@@ -74,7 +74,7 @@ public class ShowItemListService {
 	 * 
 	 * @return　孫カテゴリ情報の詰まったオブジェクトリスト
 	 */
-	public List<Category> grandChildCategoryList(){
+	public List<Category> findGrandChildCategoryList(){
 		return categoryRepository.grandChildCategoryList();
 		
 	}

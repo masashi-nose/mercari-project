@@ -52,7 +52,7 @@ public class CategoryRepository {
 	 * @return 子カテゴリ情報が詰まったオブジェクトリスト
 	 */
 	public List<Category> childCategoryList() {
-		String sql = "SELECT id, parent, name, name_all FROM category WHERE parent IS NOT NULL AND name_all IS NULL";
+		String sql = "SELECT DISTINCT id, parent, name, name_all FROM category WHERE parent IS NOT NULL AND name_all IS NULL";
 		List<Category> childCategoryList = template.query(sql, CATEGORY_ROW_MAPPER);
 		return childCategoryList;
 	}
@@ -63,7 +63,7 @@ public class CategoryRepository {
 	 * @return 親カテゴリ情報が詰まったオブジェクトリスト
 	 */
 	public List<Category> grandChildCategoryList() {
-		String sql = "SELECT id, parent, name, name_all FROM category WHERE parent IS NOT NULL AND name_all IS NOT NULL";
+		String sql = "SELECT DISTINCT id, parent, name, name_all FROM category WHERE parent IS NOT NULL AND name_all IS NOT NULL";
 		List<Category> grandChildCategoryList = template.query(sql, CATEGORY_ROW_MAPPER);
 		return grandChildCategoryList;
 	}

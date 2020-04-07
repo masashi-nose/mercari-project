@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.example.demo.domain.Category;
 import com.example.demo.domain.Item;
 import com.example.demo.form.SearchByItemNameForm;
 import com.example.demo.service.ShowItemListService;
@@ -39,7 +40,18 @@ public class ShowItemListController {
 	@RequestMapping("")
 	public String showItemList(Model model) {
 		List<Item> itemList = showItemListService.showItemList();
+
+//		カテゴリ検索用に親、子、孫カテゴリをそれぞれ検索し、リクエストスコープに格納します.
+		List<Category> parentCategoryList = showItemListService.findParentCategoryList();
+		List<Category> childCategoryList = showItemListService.findGrandChildCategoryList();
+		List<Category> grandChildCategoryList = showItemListService.findGrandChildCategoryList();
+		
+		model.addAttribute("parentList", parentCategoryList);
+		model.addAttribute("childList", childCategoryList);
+		model.addAttribute("grandChildList", grandChildCategoryList);
+		
 		model.addAttribute("itemList", itemList);
+		
 		return "item_list";
 
 	}
