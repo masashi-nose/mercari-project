@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -77,24 +78,6 @@ public class ItemRepository {
 
 	};
 
-//	/**
-//	 * itemsテーブル１行分の情報を保持するローマッパー.
-//	 * 
-//	 */
-//	private static final RowMapper<Item> ITEM_ROW_MAPPER = (rs, i) -> {
-//		Item item = new Item();
-//		item.setId(rs.getInt("id"));
-//		item.setName(rs.getString("name"));
-//		item.setCategory(rs.getInt("category"));
-//		item.setCondition(rs.getInt("condition"));
-//		item.setBrand(rs.getString("brand"));
-//		item.setPrice(rs.getInt("price"));
-//		item.setShipping(rs.getInt("shipping"));
-//		item.setDescription(rs.getString("description"));
-//		return item;
-//
-//	};
-
 	/**
 	 * itemsテーブルからidを用いて商品情報を１件検索します.
 	 * 
@@ -159,9 +142,9 @@ public class ItemRepository {
 	/**
 	 * 商品名で曖昧検索します.
 	 * 
-	 * @param name 商品名
+	 * @param name  商品名
 	 * @param brand ブランド名
-	 * @return　商品情報が詰まったオブジェクトのリスト
+	 * @return 商品情報が詰まったオブジェクトのリスト
 	 */
 	public List<Item> findByItemName(String name, String brand) {
 		StringBuilder sql = new StringBuilder();
@@ -169,8 +152,10 @@ public class ItemRepository {
 				"SELECT i.id item_id, i.name item_name, i.category item_category, i.condition item_condition, i.brand item_brand, i.price item_price, i.shipping item_shipping, i.description item_description, ");
 		sql.append(
 				"c.id category_id, c.parent category_parent, c.name category_name, c,name_all category_name_all from items i left join category c ");
-		sql.append("on i.category = c.id WHERE i.id <= 30 AND i.name ILIKE :name AND i.brand ILIKE :brand IS NULL ORDER BY i.name");
-		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + name + "%").addValue("brand", "%" + brand + "%");
+		sql.append(
+				"on i.category = c.id WHERE i.id <= 30 AND i.name ILIKE :name AND i.brand ILIKE :brand IS NULL ORDER BY i.name");
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + name + "%").addValue("brand",
+				"%" + brand + "%");
 		List<Item> itemList = template.query(sql.toString(), param, ITEM_RESULT_SET_EXTRACTOR);
 		return itemList;
 
