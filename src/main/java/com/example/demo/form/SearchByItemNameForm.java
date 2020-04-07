@@ -9,11 +9,14 @@ package com.example.demo.form;
  */
 public class SearchByItemNameForm {
 
+	/** 商品名 */
 	private String name;
+	/** ブランド */
+	private String brand;
 
 	@Override
 	public String toString() {
-		return "SearchByItemNameForm [name=" + name + "]";
+		return "SearchByItemNameForm [name=" + name + ", brand=" + brand + "]";
 	}
 
 	public String getName() {
@@ -22,6 +25,14 @@ public class SearchByItemNameForm {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getBrand() {
+		return brand;
+	}
+
+	public void setBrand(String brand) {
+		this.brand = brand;
 	}
 
 }

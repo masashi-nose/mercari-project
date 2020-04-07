@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.domain.Item;
@@ -24,6 +24,11 @@ public class ShowItemListController {
 
 	@Autowired
 	private ShowItemListService showItemListService;
+
+	@ModelAttribute
+	public SearchByItemNameForm setUpForm() {
+		return new SearchByItemNameForm();
+	}
 
 	/**
 	 * 商品一覧ページへ遷移します.
@@ -47,14 +52,13 @@ public class ShowItemListController {
 	 * @param model  リクエストスコープ作成
 	 * @return 検索結果画面
 	 */
-	public String SearchByItemName(SearchByItemNameForm form, BindingResult result, Model model) {
-		List<Item> itemList = showItemListService.findByItemName(form.getName());
+	@RequestMapping("/search")
+	public String SearchByItemName(SearchByItemNameForm form, Model model) {
+		List<Item> itemList = showItemListService.findByItemName(form.getName(), form.getBrand());
 
-		if (itemList == null) {
-			String itemName = form.getName();
-			result.rejectValue("name", "", "No results for");
+		if (itemList.size() == 0) {
 
-			model.addAttribute("itemName", itemName);
+			model.addAttribute("message", "NO ITEM FOUND");
 			return showItemList(model);
 
 		}

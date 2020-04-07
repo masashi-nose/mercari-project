@@ -39,8 +39,8 @@ public class ShowItemListService {
 	 * @param name 商品名
 	 * @return　商品情報が詰まったオブジェクトのリスト
 	 */
-	public List<Item> findByItemName(String name) {
-		return itemRepository.findByItemName(name);
+	public List<Item> findByItemName(String name, String brand) {
+		return itemRepository.findByItemName(name, brand);
 
 	}
 
