@@ -22,7 +22,7 @@ public class AddItemForm {
 	private String grandChild;
 	/** 状況 */
 	private Integer condition;
-	/** 商品詳細 */
+	/** 商品詳細d */
 	private String description;
 
 	@Override

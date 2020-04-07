@@ -32,4 +32,5 @@ public class ShowItemListService {
 		return itemRepository.findAll();
 
 	}
+
 }
