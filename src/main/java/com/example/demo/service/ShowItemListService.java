@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.domain.Category;
 import com.example.demo.domain.Item;
+import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ItemRepository;
 
 /**
@@ -21,6 +23,9 @@ public class ShowItemListService {
 
 	@Autowired
 	private ItemRepository itemRepository;
+
+	@Autowired
+	private CategoryRepository categoryRepository;
 
 	/**
 	 * 
@@ -37,11 +42,41 @@ public class ShowItemListService {
 	 * 商品名で曖昧検索します.
 	 * 
 	 * @param name 商品名
-	 * @return　商品情報が詰まったオブジェクトのリスト
+	 * @return 商品情報が詰まったオブジェクトのリスト
 	 */
 	public List<Item> findByItemName(String name, String brand) {
 		return itemRepository.findByItemName(name, brand);
 
+	}
+
+	/**
+	 * categoryテーブルから親カテゴリ情報を検索します.
+	 * 
+	 * @return 親カテゴリ情報の詰まったオブジェクトリスト
+	 */
+	public List<Category> parentCategoryList() {
+		return categoryRepository.parentCategoryList();
+
+	}
+
+	/**
+	 * categoryテーブルから子カテゴリ情報を検索します.
+	 * 
+	 * @return 子カテゴリ情報の詰まったオブジェクトリスト
+	 */
+	public List<Category> childCategoryList() {
+		return categoryRepository.childCategoryList();
+
+	}
+	
+	/**
+	 * categoryテーブルから孫カテゴリ情報を検索します.
+	 * 
+	 * @return　孫カテゴリ情報の詰まったオブジェクトリスト
+	 */
+	public List<Category> grandChildCategoryList(){
+		return categoryRepository.grandChildCategoryList();
+		
 	}
 
 }
