@@ -156,4 +156,23 @@ public class ItemRepository {
 
 	}
 
+	/**
+	 * 商品名で曖昧検索します.
+	 * 
+	 * @param name 商品名　
+	 * @return　商品情報が詰まったオブジェクトのリスト
+	 */
+	public List<Item> findByItemName(String name) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(
+				"SELECT i.id item_id, i.name item_name, i.category item_category, i.condition item_condition, i.brand item_brand, i.price item_price, i.shipping item_shipping, i.description item_description, ");
+		sql.append(
+				"c.id category_id, c.parent category_parent, c.name category_name, c,name_all category_name_all from items i left join category c ");
+		sql.append("on i.category = c.id WHERE i.id <= 30 AND WHERE i.name LIKE :name ORDER BY i.name");
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + name + "%");
+		List<Item> itemList = template.query(sql.toString(), param, ITEM_RESULT_SET_EXTRACTOR);
+		return itemList;
+
+	}
+
 }

@@ -33,4 +33,15 @@ public class ShowItemListService {
 
 	}
 
+	/**
+	 * 商品名で曖昧検索します.
+	 * 
+	 * @param name 商品名
+	 * @return　商品情報が詰まったオブジェクトのリスト
+	 */
+	public List<Item> findByItemName(String name) {
+		return itemRepository.findByItemName(name);
+
+	}
+
 }
