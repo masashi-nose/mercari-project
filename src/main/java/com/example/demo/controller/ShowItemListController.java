@@ -45,13 +45,13 @@ public class ShowItemListController {
 		List<Category> parentCategoryList = showItemListService.findParentCategoryList();
 		List<Category> childCategoryList = showItemListService.findGrandChildCategoryList();
 		List<Category> grandChildCategoryList = showItemListService.findGrandChildCategoryList();
-		
+
 		model.addAttribute("parentList", parentCategoryList);
 		model.addAttribute("childList", childCategoryList);
 		model.addAttribute("grandChildList", grandChildCategoryList);
-		
+
 		model.addAttribute("itemList", itemList);
-		
+
 		return "item_list";
 
 	}
@@ -66,7 +66,11 @@ public class ShowItemListController {
 	 */
 	@RequestMapping("/search")
 	public String SearchByItemName(SearchByItemNameForm form, Model model) {
-		List<Item> itemList = showItemListService.findByItemName(form.getName(), form.getBrand());
+		System.out.println(form.getName());
+		System.out.println(form.getBrand());
+
+		List<Item> itemList = showItemListService.findItemByNameAndBrand(form.getName(), form.getBrand());
+		System.out.println(itemList);
 
 		if (itemList.size() == 0) {
 
@@ -76,8 +80,20 @@ public class ShowItemListController {
 		}
 
 		model.addAttribute("itemList", itemList);
+		
+		List<Category> parentCategoryList = showItemListService.findParentCategoryList();
+		List<Category> childCategoryList = showItemListService.findGrandChildCategoryList();
+		List<Category> grandChildCategoryList = showItemListService.findGrandChildCategoryList();
+
+		model.addAttribute("parentList", parentCategoryList);
+		model.addAttribute("childList", childCategoryList);
+		model.addAttribute("grandChildList", grandChildCategoryList);
 
 		return "item_list";
 
 	}
+
+	
+	
+	
 }

@@ -44,9 +44,21 @@ public class ShowItemListService {
 	 * @param name 商品名
 	 * @return 商品情報が詰まったオブジェクトのリスト
 	 */
-	public List<Item> findByItemName(String name, String brand) {
-		return itemRepository.findByItemName(name, brand);
+	public List<Item> findItem(String name, String parent, String child, String grandChild, String brand) {
+		return itemRepository.findItem(name, parent, child, grandChild, brand);
 
+	}
+
+	/**
+	 * 
+	 * 商品名とブランド名から商品を検索します.
+	 * 
+	 * @param name  商品名
+	 * @param brand ブランド
+	 * @return 検索結果が詰まったリスト
+	 */
+	public List<Item> findItemByNameAndBrand(String name, String brand) {
+		return itemRepository.findItemByNameAndBrand(name, brand);
 	}
 
 	/**
@@ -68,15 +80,15 @@ public class ShowItemListService {
 		return categoryRepository.childCategoryList();
 
 	}
-	
+
 	/**
 	 * categoryテーブルから孫カテゴリ情報を検索します.
 	 * 
-	 * @return　孫カテゴリ情報の詰まったオブジェクトリスト
+	 * @return 孫カテゴリ情報の詰まったオブジェクトリスト
 	 */
-	public List<Category> findGrandChildCategoryList(){
+	public List<Category> findGrandChildCategoryList() {
 		return categoryRepository.grandChildCategoryList();
-		
+
 	}
 
 }

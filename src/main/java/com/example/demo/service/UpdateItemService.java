@@ -8,26 +8,25 @@ import com.example.demo.domain.Item;
 import com.example.demo.repository.ItemRepository;
 
 /**
- * itemsテーブルに商品情報を追加する業務処理を行うサービスクラス.
+ * 
+ * 商品情報を更新する業務処理を行うサービスクラス.
  * 
  * @author masashi.nose
  *
  */
 @Service
 @Transactional
-public class AddItemService {
+public class UpdateItemService {
 
 	@Autowired
 	private ItemRepository itemRepository;
 
 	/**
-	 * DBのitemsテーブルに商品情報を追加します.
+	 * itemsテーブルの商品情報を更新します.
 	 * 
-	 * @param item 商品情報が詰まったオブジェクト
+	 * @param item 商品情報オブジェクト
 	 */
-	public void addItem(Item item) {
-		itemRepository.insert(item);
-
+	public void update(Item item) {
+		itemRepository.update(item);
 	}
-
 }

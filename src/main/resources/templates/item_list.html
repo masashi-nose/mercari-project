@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8">
 
@@ -34,7 +34,8 @@
     <div id="navbar" class="collapse navbar-collapse">
       <div>
         <ul class="nav navbar-nav navbar-right">
-          <li><a id="logout" href="./login.html">Logout <i class="fa fa-power-off"></i></a></li>
+          <li sec:authorize="!isAuthenticated()"><a id="login" th:href="@{/toLogin}">Login</a>
+          <li sec:authorize="isAuthenticated()"><a id="logout" th:href="@{/logout}">Logout <i class="fa fa-power-off"></i></a></li>
         </ul>
         <p class="navbar-text navbar-right">
           <span id="loginName">user: userName</span>
@@ -46,7 +47,7 @@
   <div id="main" class="container-fluid">
     <!-- addItem link -->
     <div id="addItemButton">
-      <a class="btn btn-default" href="./add.html"><i class="fa fa-plus-square-o"></i> Add New Item</a>
+      <a class="btn btn-default" href="./add.html" th:href="@{/toAdd}"><i class="fa fa-plus-square-o"></i> Add New Item</a>
     </div>
 
     <!-- 検索フォーム -->
@@ -57,19 +58,19 @@
         </div>
         <div class="form-group"><i class="fa fa-plus"></i></div>
         <div class="form-group">
-          <select class="form-control">
-            <option>- parentCategory -</option>
-            <option  th:each="parent:${parentList}" th:text="${parent.name}"></option>
+          <select class="form-control" name="parent" disabled="disabled">
+            <option value="">- parentCategory -</option>
+            <option th:each="parent:${parentList}" th:text="${parent.name}"  th:value="${parent.name}" value=""/>
             
           </select>
-          <select class="form-control">
-            <option>- childCategory -</option>
-            <option  th:each="child:${childList}" th:text="${child.name}"></option>
+          <select class="form-control" name="child" disabled="disabled">
+            <option value="">- childCategory -</option>
+            <option  th:each="child:${childList}" th:text="${child.name}" th:value="${child.name}" value=""/>
            
           </select>
-          <select class="form-control">
-            <option>- grandChild -</option>
-            <option  th:each="grandChild:${grandChildList}" th:text="${grandChild.name}"></option>
+          <select class="form-control" name="grandChild" disabled="disabled">
+            <option value="">- grandChild -</option>
+            <option  th:each="grandChild:${grandChildList}" th:text="${grandChild.name}" th:value="${grandChild.name}" value=""/>
             </select>
         </div>
         <div class="form-group"><i class="fa fa-plus"></i></div>
@@ -113,7 +114,7 @@
         <tbody th:each="item:${itemList}">
           <tr>
             <td class="item-name"><a th:href="@{'/detail/showDetail?id='+${item.id}}"><span th:text="${item.name}"></span></a></td>
-            <td class="item-price"><span th:text="${item.price}"></span></td>
+            <td class="item-price"><span th:text="${'$' + item.price}"></span></td>
             <td class="item-category"><a href=""><span th:each="category:${item.categoryList}" th:text=${category.nameAll}></span></a></td>
             <td class="item-brand"><span th:text="${item.brand}"></span><a href=""></a></td>
             <td class="item-condition"><span th:text="${item.condition}"></span></td>

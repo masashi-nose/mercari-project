@@ -111,13 +111,13 @@ public class ItemRepository {
 
 	}
 
-	@PostConstruct
-	public void init() {
-		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert((JdbcTemplate) template.getJdbcOperations());
-		SimpleJdbcInsert withtableName = simpleJdbcInsert.withTableName("items");
-		insert = withtableName.usingColumns("id");
-
-	}
+//	@PostConstruct
+//	public void init() {
+//		SimpleJdbcInsert simpleJdbcInsert = new SimpleJdbcInsert((JdbcTemplate) template.getJdbcOperations());
+//		SimpleJdbcInsert withtableName = simpleJdbcInsert.withTableName("items");
+//		insert = withtableName.usingColumns("id");
+//
+//	}
 
 	/**
 	 * itemsテーブルに商品情報を追加します.
@@ -125,39 +125,90 @@ public class ItemRepository {
 	 * @param item 商品情報が詰まったオブジェクト
 	 * @return IDが自動採番されたitemオブジェクト
 	 */
-	public Item insert(Item item) {
+//	public Item insert(Item item) {
+//		SqlParameterSource param = new BeanPropertySqlParameterSource(item);
+//
+//		if (item.getId() == null) {
+//			Number key = insert.executeAndReturnKey(param);
+//			item.setId(key.intValue());
+//
+//		}
+//
+//		return item;
+//
+//	}
+
+	/**
+	 * itemsテーブルにインサートします.
+	 * 
+	 * @param item 商品情報
+	 */
+	public void insert(Item item) {
 		SqlParameterSource param = new BeanPropertySqlParameterSource(item);
-
-		if (item.getId() == null) {
-			Number key = insert.executeAndReturnKey(param);
-			item.setId(key.intValue());
-
-		}
-
-		return item;
+		String sql = "INSERT INTO items (name, condition, category, brand, price, description) VALUES (:name, :condition, :category, :brand, :price, :description)";
+		template.update(sql, param);
 
 	}
 
 	/**
-	 * 商品名で曖昧検索します.
+	 * 商品名、親カテゴリ、子カテゴリ、孫カテゴリ、ブランド名で曖昧検索します.
 	 * 
-	 * @param name  商品名
-	 * @param brand ブランド名
+	 * @param name       商品名
+	 * @param parent     親カテゴリ
+	 * @param child      子カテゴリ
+	 * @param grandChild 孫カテゴリ
+	 * @param brand      ブランド名
 	 * @return 商品情報が詰まったオブジェクトのリスト
 	 */
-	public List<Item> findByItemName(String name, String brand) {
+	public List<Item> findItem(String name, String parent, String child, String grandChild, String brand) {
 		StringBuilder sql = new StringBuilder();
 		sql.append(
 				"SELECT i.id item_id, i.name item_name, i.category item_category, i.condition item_condition, i.brand item_brand, i.price item_price, i.shipping item_shipping, i.description item_description, ");
 		sql.append(
-				"c.id category_id, c.parent category_parent, c.name category_name, c,name_all category_name_all from items i left join category c ");
+				"c.id category_id, c.parent category_parent, c.name category_name, c.name_all category_name_all from items i left join category c ");
+		sql.append("on i.category = c.id WHERE i.id <= 30 AND i.name ILIKE :name ");
 		sql.append(
-				"on i.category = c.id WHERE i.id <= 30 AND i.name ILIKE :name AND i.brand ILIKE :brand IS NULL ORDER BY i.name");
+				"AND :parent IN (SELECT SPLIT_PART(c.name_all,'/', 1) FROM category) AND :child IN (SELECT SPLIT_PART(c.name_all,'/', 2) FROM category) AND :grandChild IN (SELECT SPLIT_PART(c.name_all ,'/', 3) FROM category) AND i.brand ILIKE :brand ORDER BY i.name");
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + name + "%")
+				.addValue("parent", "%" + parent + "%").addValue("child", "%" + child + "%")
+				.addValue("grandChild", "%" + grandChild + "%").addValue("brand", "%" + brand + "%");
+		List<Item> itemList = template.query(sql.toString(), param, ITEM_RESULT_SET_EXTRACTOR);
+		return itemList;
+
+	}
+
+	/**
+	 * 商品名とブランド名から商品を検索します.
+	 * 
+	 * @param name  商品名
+	 * @param brand ブランド
+	 * @return 検索結果が詰まったリスト
+	 */
+	public List<Item> findItemByNameAndBrand(String name, String brand) {
+		StringBuilder sql = new StringBuilder();
+		sql.append(
+				"SELECT i.id item_id, i.name item_name, i.category item_category, i.condition item_condition, i.brand item_brand, i.price item_price, i.shipping item_shipping, i.description item_description, ");
+		sql.append(
+				"c.id category_id, c.parent category_parent, c.name category_name, c.name_all category_name_all from items i left join category c ");
+		sql.append("on i.category = c.id WHERE i.id <= 30 AND i.name ILIKE :name AND i.brand ILIKE :brand IS NULL");
 		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%" + name + "%").addValue("brand",
 				"%" + brand + "%");
 		List<Item> itemList = template.query(sql.toString(), param, ITEM_RESULT_SET_EXTRACTOR);
 		return itemList;
 
+	}
+
+	/**
+	 * itemsテーブルの商品情報を更新します.
+	 * 
+	 * @param item 商品情報オブジェクト
+	 */
+	public void update(Item item) {
+		StringBuilder sql = new StringBuilder();
+		SqlParameterSource param = new BeanPropertySqlParameterSource(item);
+		sql.append(
+				"UPDATE items SET name = :name, condition = :condition, brand = :brand, price = :price, description = :description WHERE id = :id");
+		template.update(sql.toString(), param);
 	}
 
 }

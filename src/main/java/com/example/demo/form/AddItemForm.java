@@ -1,5 +1,8 @@
 package com.example.demo.form;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 /**
  * 商品追加画面からリクエストパラメータを受け取るフォーム.
  * 
@@ -9,20 +12,28 @@ package com.example.demo.form;
 public class AddItemForm {
 
 	/** 商品名 */
+	@NotBlank(message = "error: may not be empty")
 	private String name;
 	/** 価格 */
+	@NotBlank(message = "error: may not be empty")
 	private String price;
 	/** ブランド */
+	@NotBlank(message = "error: may not be empty")
 	private String brand;
 	/** 親カテゴリ */
+	@NotBlank(message = "error: may not be empty")
 	private String parentCategory;
 	/** 子カテゴリ */
+	@NotBlank(message = "error: may not be empty")
 	private String childCategory;
 	/** 孫カテゴリ */
+	@NotBlank(message = "error: may not be empty")
 	private String grandChild;
 	/** 状況 */
-	private Integer condition;
-	/** 商品詳細d */
+	@NotEmpty(message = "error: may not be empty")
+	private String condition;
+	/** 商品詳細 */
+	@NotBlank(message = "error: may not be empty")
 	private String description;
 
 	@Override
@@ -30,6 +41,26 @@ public class AddItemForm {
 		return "AddItemForm [name=" + name + ", price=" + price + ", brand=" + brand + ", parentCategory="
 				+ parentCategory + ", childCategory=" + childCategory + ", grandChild=" + grandChild + ", condition="
 				+ condition + ", description=" + description + "]";
+	}
+
+	/**
+	 * String型のpriceをInteger型にして返します.
+	 * 
+	 * @return Integer型のpriceデータ
+	 */
+	public Integer getIntPrice() {
+		if(price.equals("")) {
+			return null;
+		}
+		return Integer.parseInt(this.price);
+	}
+	
+	public Integer getIntCondition() {
+		if(condition.equals("")) {
+			return null;
+		}
+		
+		return Integer.parseInt(this.condition);
 	}
 
 	public String getName() {
@@ -80,11 +111,11 @@ public class AddItemForm {
 		this.grandChild = grandChild;
 	}
 
-	public Integer getCondition() {
+	public String getCondition() {
 		return condition;
 	}
 
-	public void setCondition(Integer condition) {
+	public void setCondition(String condition) {
 		this.condition = condition;
 	}
 
